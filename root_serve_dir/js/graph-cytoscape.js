@@ -141,8 +141,8 @@ $(loadCy = function(){
         }
     }; 
 
-
     $('#cy').cytoscape(options); 
+    
 });
 
 

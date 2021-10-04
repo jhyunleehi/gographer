@@ -1,0 +1,11 @@
+# github.com/fjukstad/gographer v0.0.0-20170219114254-1f99ae447b79
+## explicit
+github.com/fjukstad/gographer
+# github.com/fjukstad/gowebsocket v0.0.0-20131219140716-332a7dea5cb6
+## explicit
+github.com/fjukstad/gowebsocket
+# github.com/protolambda/gocyto v0.0.1
+## explicit
+# golang.org/x/net v0.0.0-20210916014120-12bc252f5db8
+## explicit
+golang.org/x/net/websocket
