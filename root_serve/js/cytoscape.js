@@ -20,8 +20,8 @@ function Graph(cy){
                 height: 10,
             },
             position: {
-                x: Math.random() * 100,
-                y: Math.random() * 100
+                x: Math.random() * 500,
+                y: Math.random() * 500
             }
         };
 
@@ -67,7 +67,8 @@ function Graph(cy){
 
 }
 $(loadCy = function(){
-    options = {
+    let cyto = cytoscape ({
+        container: document.getElementById('cy'),
         layout: {
             name: 'random', 
            // gravity: true,
@@ -95,53 +96,72 @@ $(loadCy = function(){
             .css({
                 'target-arrow-shape': 'triangle'
         }),
-        elements : {
-            
+        elements : {            
             nodes: [],
             edges : []
-        },
-
-        ready: function(){
-            cy = this;
-            console.log("ready");
-            graph = new Graph(cy); 
-            
-            // Load data from JSON 
-            var url = "ws://"+window.location.hostname+":3999/ws";
-            var socket = new WebSocket(url); 
-            socket.onmessage = function(m){
-                var message = JSON.parse(m.data); 
-                if(message.command == "\"InitGraph\""){
-                    
-                    json = JSON.parse(JSON.parse(message.graph)); 
-                    var numAdded = 0; 
-                    console.log(json.nodes);
-                    
-                    for(var i in json.nodes){
-                        var n = json.nodes[i]; 
-                        graph.addNode(n); 
-                    }
-                    //cy.layout(); 
-                    var cy_nodes = cy.add(nodes); 
-                    for(var j in json.edges){
-                        var e = json.edges[j]; 
-                        graph.addEdge(e); 
-                                                //graph.push(ed); 
-                    }
-                    cy.layout();
-                }
-
-                if(message.command == "\"AddNode\""){
-                    graph.addNode(message); 
-                    cy.layout();
-                }
-            } 
-            
-            
         }
-    }; 
+       
+    } );
+    
 
- $('#cy').cytoscape(options); 
+    $(document).ready(function() {
+        //cy = cyto //document.getElementById('cy'),
+        console.log("ready");
+        graph = new Graph(cyto); 
+        
+        // Load data from JSON 
+        var url = "ws://"+window.location.hostname+":3999/ws";
+        var socket = new WebSocket(url); 
+        socket.onmessage = function(m){
+            var message = JSON.parse(m.data); 
+            if(message.command == "\"InitGraph\""){
+                
+                json = JSON.parse(JSON.parse(message.graph)); 
+                var numAdded = 0; 
+                console.log(json.nodes);
+                
+                for(var i in json.nodes){
+                    var n = json.nodes[i]; 
+                    graph.addNode(n); 
+                }
+                
+                //cy.layout(); 
+                var cy_nodes = cyto.add(nodes); 
+                for(var j in json.edges){
+                    var e = json.edges[j]; 
+                    console.log(e);
+                    graph.addEdge(e); 
+                                            //graph.push(ed); 
+                }
+                cyto.layout({
+                    name: 'random'
+                });
+            }
+
+            if(message.command == "\"AddNode\""){
+                graph.addNode(message); 
+                cyto.layout({
+                    name: 'random'
+                });
+            }
+
+            if(message.command == "\"AddNode\""){
+                //graph.addNode( createNodeMap( message.id, message.name, 0, message.size ) );
+                graph.addNode( message );
+            }
+            if(message.command == "\"AddEdge\""){
+                //graph.addLink( createEdgeMap( message.source, message.target, message.id, message.weight ) );
+                graph.addEdge( message );
+            }            
+            
+
+        }     
+        
+    });
+        
+
+    //document.getElementById('cy').cytoscape(options);
+    //$('#cy').cytoscape(options); 
     
 });
 

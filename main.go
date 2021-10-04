@@ -48,7 +48,7 @@ func main() {
 
 	//gopath := os.Getenv("GOPATH")
 	//rootServeDir := gopath + "/src/fjukstad/gographer/root_serve_dir/"
-	rootServeDir := "./root_serve_dir/"
+	rootServeDir := "./root_serve/"
 
 	go makeRandomChanges(g)
 
