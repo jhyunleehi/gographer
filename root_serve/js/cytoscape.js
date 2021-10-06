@@ -60,20 +60,15 @@ function Graph(cy){
     };
 
 
-    
-    var update = function() {
-        cy.layout(); 
-    }
-
 }
 $(loadCy = function(){
     let cyto = cytoscape ({
         container: document.getElementById('cy'),
         layout: {
-            name: 'random', 
-           // gravity: true,
-            liveUpdate: true,
-            maxSimulationtime: 1000,
+            name: 'cose', 
+            //gravity: true,
+            //liveUpdate: true,
+            //maxSimulationtime: 1000,
         },
         
         showOverlay: false,
@@ -133,27 +128,23 @@ $(loadCy = function(){
                     graph.addEdge(e); 
                                             //graph.push(ed); 
                 }
-                cyto.layout({
-                    name: 'random'
-                });
+                
             }
 
             if(message.command == "\"AddNode\""){
-                graph.addNode(message); 
-                cyto.layout({
-                    name: 'random'
-                });
-            }
-
-            if(message.command == "\"AddNode\""){
-                //graph.addNode( createNodeMap( message.id, message.name, 0, message.size ) );
-                graph.addNode( message );
+                graph.addNode(message);                 
             }
             if(message.command == "\"AddEdge\""){
                 //graph.addLink( createEdgeMap( message.source, message.target, message.id, message.weight ) );
                 graph.addEdge( message );
             }            
-            
+            //cyto.layout().run();
+            let layout=cyto.layout({ 
+                name: 'random',
+                animate: true, // whether to transition the node positions
+                animationDuration: 500, // duration of animation in ms if enable                
+             });
+            layout.run();
 
         }     
         
@@ -166,5 +157,5 @@ $(loadCy = function(){
 });
 
 
-    var color = d3.scale.category20();
+   // var color = d3.scale.category20();
 

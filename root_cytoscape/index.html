@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="css/graph-cytoscape.css" />
+    <title>Tutorial 1: Getting Started</title>
+    <script src='js/cytoscape.min.js'></script>    
+</head>
+
+<body>
+    <h1>Graph Visualizer Test</h1>
+    <h5>Dynamic updates through websocket</h5>
+    <div id="cy"></div>
+    <!-- <script src='js/code.js'></script> -->
+    <script>
+        var cy = cytoscape({
+            container: document.getElementById('cy'),
+            elements: [
+                { data: { id: 'a', parent: 'parent1' }},
+                { data: { id: 'b', parent: 'parent1' }},
+                { data: { id: 'c' } },
+                { data: { id: 'd' } },
+                { data: { id: 'e' } },
+                { data: { id: 'parent1' }},
+                { data: { id: 'ab', source: 'a', target: 'b' } },
+                { data: { id: 'bc', source: 'c', target: 'b' } },  
+                { data: { id: 'ce', source: 'c', target: 'e' } },
+                { data: { id: 'de', source: 'd', target: 'e' } },
+                { data: { id: 'n1', parent: 'np'} },
+                { data: { id: 'n2' }, renderedPosition: { x: 200, y: 200 }},
+                { data: { id: 'n3', parent: 'np' }, position: { x: 123, y: 234 }},
+                { data: { id: 'np' }},
+                { data: { id: 'e1', source: 'n1', target: 'n2'}, pannable: true}
+            ],
+            style: [
+                {
+                    selector: 'node',
+                    style: { shape: 'hexagon', label: 'data(id)' }
+                }]
+        });
+
+        cy.add({
+            group: 'nodes',
+            data: { weight: 75, id: 'ok' },
+            position: { x: 200, y: 200 },
+        });
+
+        var eles = cy.add([
+            { group: 'nodes', data: { id: 'n0' }, position: { x: 100, y: 100 } },
+            { group: 'nodes', data: { id: 'n1' }, position: { x: 200, y: 50 } },
+            { group: 'edges', data: { id: 'e0', source: 'n0', target: 'n1' } }
+        ]);
+       
+
+
+        for (var i = 0; i < 10; i++) {
+            cy.add({
+                data: { id: 'node' + i }
+            }
+            );
+            var source = 'node' + i;
+            cy.add({
+                data: {
+                    id: 'edge' + i,
+                    source: source,
+                    target: (i % 2 == 0 ? 'a' : 'b')
+                }
+            });
+        }
+
+
+        cy.layout({
+            name: 'preset',
+            avoidOverlap: true,
+        }).run();
+
+        cy.$('#a').on('tap', function(evt){ console.log( 'tap ' + evt.target.id() );  });
+        cy.$('node').on('tap', function(evt){ console.log( 'tap ' + evt.target.id() );  });
+        cy.$('#b').pon('tap').then(function( event ){ console.log('tap promise fulfilled');});
+        cy.$('node').pon('tap').then(function( event ){ console.log('node tap promise fulfilled');});
+        cy.$('node').one('tap', function(e){
+            var ele = e.target;  
+            console.log('tapped ' + ele.id());
+        });
+        cy.nodes().one('click', function(e){
+            var ele = e.target;
+            console.log('clicked ' + ele.id());
+        });
+
+        cy.nodes().forEach(function( ele ){console.log( ele.id() );});
+
+        console.log(cy.$('#a').json() );
+        console.log( cy.elements().jsons() );
+
+        cy.$('#e').neighborhood(function( ele ){  console.log(ele.id()); return ele.isEdge();});
+
+        var jAni = cy.$('#c').animation({
+            style: {
+                'background-color': 'red',
+                'width': 100               
+            },
+            duration: 1000
+        });
+
+        jAni.play();
+
+    </script>
+</body>
+
+</html>

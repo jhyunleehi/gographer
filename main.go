@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/fjukstad/gographer"
+	"gographer/gographer"
 )
 
 // Make random changes to graph
@@ -22,6 +22,7 @@ func makeRandomChanges(g *gographer.Graph) {
 		for i := 0; i < nodesToBeRemoved; i++ {
 			id := rand.Intn(numNodes)
 			g.RemoveNode(id)
+			time.Sleep(500 * time.Millisecond)
 		}
 
 		// Add some more nodes and edges
@@ -29,9 +30,10 @@ func makeRandomChanges(g *gographer.Graph) {
 			id := rand.Intn(numNodes)
 			g.AddNode(id, "node "+strconv.Itoa(id), id, 1)
 			g.AddEdge(id, rand.Intn(numNodes), id, 1)
+			time.Sleep(500 * time.Millisecond)
 		}
 
-		time.Sleep(2000 * time.Millisecond)
+		//time.Sleep(1000 * time.Millisecond)
 	}
 }
 
@@ -39,7 +41,7 @@ func main() {
 	g := gographer.New()
 
 	rand.Seed(time.Now().UTC().UnixNano())
-	numNodes := 50
+	numNodes := 10
 	for i := 0; i < numNodes; i++ {
 		id := rand.Intn(numNodes)
 		g.AddNode(id, "node "+strconv.Itoa(id), id, 1)
